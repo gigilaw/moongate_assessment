@@ -1,40 +1,39 @@
-'use client'
+"use client"
 import { useState } from 'react';
 import CountDownTimer from './components/CountDownTimer';
 
-interface Props {
-  // add the required props and their types here
-}
+const Page = (): JSX.Element => {
+  const [targetDate, setTargetDate] = useState<Date | undefined>(undefined);
 
-const Page = (props: Props): JSX.Element => {
-  const THREE_DAYS_IN_MS = 3 * 24 * 60 * 60 * 1000;
-  const NOW_IN_MS = new Date().getTime();
-
-  const dateTimeAfterThreeDays = NOW_IN_MS + THREE_DAYS_IN_MS;
-  const [targetDate, setTargetDate] = useState<Date>(new Date(dateTimeAfterThreeDays));
-
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
-    event.preventDefault();
-    if (event.target.value) {
-      setTargetDate(new Date(event.target.value));
-    } else {
-      setTargetDate(new Date(dateTimeAfterThreeDays));
+  const handleClick = (): void => {
+    const input = document.querySelector<HTMLInputElement>('#countdown-date-time');
+    if (input?.value) {
+      setTargetDate(new Date(input.value));
     }
   };
 
   return (
-          <div>
+          <div >
             <form>
-              <label>Select a Date and Time:</label>
               <input
                 id="countdown-date-time"
                 name="countdown-date-time"
                 type="datetime-local"
-                onChange={handleChange}
               />
+              <button type="button" onClick={handleClick}>
+               Start
+              </button>
             </form>
-            <CountDownTimer targetDate={targetDate} />
-      </div>
+            {!targetDate ? <p> Select a date and time to start the countdown. </p> : (
+              <>
+                <p>
+                  Countdown to <strong>{targetDate.toLocaleString()}</strong>:
+                </p>
+                <CountDownTimer targetDate={targetDate} />
+              </>
+              ) 
+            }
+          </div>
   );
 };
 
